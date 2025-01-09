@@ -1,0 +1,25 @@
+﻿using JustStore.Models;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DataAccess.Entity
+{
+    [Table("ProductImages")]
+    public class ProductImagesEntity
+    {
+        [Key]
+        public int ID { get; set; }
+        [Required]
+
+        public string ImageUrl { get; set; }
+        public int ProductId { get; set; }
+
+        [ForeignKey("ProductId")]
+        public ProductEntity Product { get; set; }
+    }
+}
