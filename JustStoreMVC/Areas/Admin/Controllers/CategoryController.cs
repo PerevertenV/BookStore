@@ -1,11 +1,9 @@
 ﻿using AutoMapper;
-using DataAccess.Data;
 using DataAccess.Entity;
 using DataAccess.Repository.IRepository;
 using JustStore.Models;
 using JustStore.Utlity;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JustStoreMVC.Areas.Admin.Controllers
@@ -14,7 +12,7 @@ namespace JustStoreMVC.Areas.Admin.Controllers
     [Authorize(Roles = SD.Role_Admin)]
     public class CategoryController : Controller
     {
-        readonly IUnitOfWork _unitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         public CategoryController(IUnitOfWork unitOfWork, IMapper mapper)
         {
@@ -34,13 +32,13 @@ namespace JustStoreMVC.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult CreateNewCategory(Category obj)
         {
-            if (obj.Name == obj.DisplayOrder.ToString())
+            if (obj.Name == obj.DisplayOrder.ToString()) 
             {
                 ModelState.AddModelError("name", "The Display Order can`t exactly match the Name");
             }
             if (ModelState.IsValid)
             {
-                _unitOfWork.Category.Add(_mapper.Map <CategoryEntity>(obj));
+                _unitOfWork.Category.Add(_mapper.Map<CategoryEntity>(obj));
                 _unitOfWork.save();
                 TempData["success"] = "Category created successfully";
                 return RedirectToAction("Index");
@@ -54,7 +52,10 @@ namespace JustStoreMVC.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            Category? CategoryFromDBbyID = _mapper.Map<Category>(_unitOfWork.Category.GetFirstOrDefault(u => u.ID == id));
+
+            Category? CategoryFromDBbyID = _mapper.Map<Category>(_unitOfWork.Category
+                .GetFirstOrDefault(u => u.ID == id));
+
             if (CategoryFromDBbyID == null)
             {
                 TempData["error"] = "Category wasn`t updated";
@@ -85,8 +86,10 @@ namespace JustStoreMVC.Areas.Admin.Controllers
             {
                 return NotFound();
             }
+
             Category? CategoryFromDBbyID = _mapper.Map<Category>(_unitOfWork.Category
                 .GetFirstOrDefault(u => u.ID == id));
+
             if (CategoryFromDBbyID == null)
             {
                 return NotFound();
@@ -98,6 +101,7 @@ namespace JustStoreMVC.Areas.Admin.Controllers
         {
             Category? CategoryFromDBbyID = _mapper.Map<Category>(_unitOfWork.Category
                 .GetFirstOrDefault(u => u.ID == id));
+
             if (CategoryFromDBbyID == null)
             {
                 TempData["error"] = "Category wasn`t deleted";

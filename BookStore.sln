@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JustStore.Models", "JustSto
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JustStore.Utlity", "JustStore.Utlity\JustStore.Utlity.csproj", "{9CEEA34B-9347-444A-813C-792A10211E28}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookStoreTestEnvironment", "BookStoreTestEnvironment\BookStoreTestEnvironment.csproj", "{5B0D0801-E41B-463B-A981-D5D974411220}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{9CEEA34B-9347-444A-813C-792A10211E28}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9CEEA34B-9347-444A-813C-792A10211E28}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9CEEA34B-9347-444A-813C-792A10211E28}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B0D0801-E41B-463B-A981-D5D974411220}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B0D0801-E41B-463B-A981-D5D974411220}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B0D0801-E41B-463B-A981-D5D974411220}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B0D0801-E41B-463B-A981-D5D974411220}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
