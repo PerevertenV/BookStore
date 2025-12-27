@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using DataAccess.Entity;
 using DataAccess.Repository.IRepository;
-using JustStore.Models;
-using JustStore.Models.ViewModels;
-using JustStore.Utlity;
+using DataAccess.Models;
+using DataAccess.Models.ViewModels;
+using DataAccess.Utlity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Stripe.Checkout;
@@ -45,7 +45,7 @@ namespace JustStoreMVC.Areas.Customer.Controllers
             foreach(var cart in ShoppingCartVM.ShoppingCartList) 
             {
                 cart.Product.ProductImages = productImages.Where(u =>
-                    u.ProductId == cart.Product.ID).ToList();
+                    u.ProductId == cart.Product.Id).ToList();
                 cart.Price = GetPriceBasedOnQuantity(cart);
                 ShoppingCartVM.OrderHeader.OrderTotal += (cart.Price * cart.Count);
             }
@@ -73,8 +73,8 @@ namespace JustStoreMVC.Areas.Customer.Controllers
                 .ApplicationUser.Name;
             ShoppingCartVM.OrderHeader.PhoneNumber = ShoppingCartVM.OrderHeader
                 .ApplicationUser.PhoneNumber;
-            ShoppingCartVM.OrderHeader.StreetAdress = ShoppingCartVM.OrderHeader
-                .ApplicationUser.StreetAdress;
+            ShoppingCartVM.OrderHeader.StreetAddress = ShoppingCartVM.OrderHeader
+                .ApplicationUser.StreetAddress;
             ShoppingCartVM.OrderHeader.City = ShoppingCartVM.OrderHeader
                 .ApplicationUser.City;
             ShoppingCartVM.OrderHeader.State = ShoppingCartVM.OrderHeader

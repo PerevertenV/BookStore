@@ -1,8 +1,6 @@
-﻿using AutoMapper;
-using DataAccess.Entity;
-using DataAccess.Repository.IRepository;
-using JustStore.Models;
-using JustStore.Utlity;
+﻿using BookStore.Services.IServices;
+using DataAccess.Models;
+using DataAccess.Utlity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,104 +10,88 @@ namespace JustStoreMVC.Areas.Admin.Controllers
     [Authorize(Roles = SD.Role_Admin)]
     public class CategoryController : Controller
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
-        public CategoryController(IUnitOfWork unitOfWork, IMapper mapper)
+        private readonly IService _service;
+
+        public CategoryController(IService service)
         {
-            _unitOfWork = unitOfWork;
-            _mapper = mapper;
+            _service = service;
         }
+
         public IActionResult Index()
         {
-            List<Category> objectFromDB = _mapper.Map<List<Category>>(_unitOfWork.Category.GetAll().ToList());
-            return View(objectFromDB);
+            return View(_service.Category.GetAllCategories());
         }
 
         public IActionResult CreateNewCategory()
         {
             return View();
         }
+
         [HttpPost]
         public IActionResult CreateNewCategory(Category obj)
         {
-            if (obj.Name == obj.DisplayOrder.ToString()) 
+            var addingResult = _service.Category.CreateNewCategory(obj);
+
+            if (!addingResult)
             {
-                ModelState.AddModelError("name", "The Display Order can`t exactly match the Name");
+                TempData["error"] = "Incorrect data or this category already exists";
+                return View();
             }
-            if (ModelState.IsValid)
-            {
-                _unitOfWork.Category.Add(_mapper.Map<CategoryEntity>(obj));
-                _unitOfWork.save();
-                TempData["success"] = "Category created successfully";
-                return RedirectToAction("Index");
-            }
-            return View();
+
+            TempData["success"] = "Category created successfully";
+            return RedirectToAction("Index");
         }
 
         public IActionResult EditCategory(int? id)
         {
-            if (id == null || id == 0)
+            var categoryFromDb = _service.Category.GetCategoryById(id);
+
+            if (categoryFromDb == null)
             {
+                TempData["error"] = "Category doesn't exist";
                 return NotFound();
             }
 
-            Category? CategoryFromDBbyID = _mapper.Map<Category>(_unitOfWork.Category
-                .GetFirstOrDefault(u => u.ID == id));
-
-            if (CategoryFromDBbyID == null)
-            {
-                TempData["error"] = "Category wasn`t updated";
-                return NotFound();
-            }
-            return View(CategoryFromDBbyID);
+            return View(categoryFromDb);
         }
+
         [HttpPost]
         public IActionResult EditCategory(Category obj)
         {
-            if (obj.Name == obj.DisplayOrder.ToString())
+            var updatingResult = _service.Category.UpdateCategory(obj);
+
+            if (!updatingResult)
             {
-                ModelState.AddModelError("name", "The Display Order can`t exactly match the Name");
+                TempData["error"] = "Incorrect data";
+                return View();
             }
-            if (ModelState.IsValid)
-            {
-                _unitOfWork.Category.Update(_mapper.Map<CategoryEntity>(obj));
-                _unitOfWork.save();
-                TempData["success"] = "Category updated successfully";
-                return RedirectToAction("Index");
-            }
-            return View();
+
+            TempData["success"] = "Category updated successfully";
+            return RedirectToAction("Index");
         }
 
         public IActionResult DeleteCategory(int? id)
         {
-            if (id == null || id == 0)
+            var categoryFromDb = _service.Category.GetCategoryById(id);
+
+            if (categoryFromDb == null)
             {
+                TempData["error"] = "Category doesn't exist";
                 return NotFound();
             }
 
-            Category? CategoryFromDBbyID = _mapper.Map<Category>(_unitOfWork.Category
-                .GetFirstOrDefault(u => u.ID == id));
-
-            if (CategoryFromDBbyID == null)
-            {
-                return NotFound();
-            }
-            return View(CategoryFromDBbyID);
+            return View(categoryFromDb);
         }
-        [HttpPost, ActionName("DeleteCategory")]
-        public IActionResult DeleteCategoryPOST(int? id)
-        {
-            Category? CategoryFromDBbyID = _mapper.Map<Category>(_unitOfWork.Category
-                .GetFirstOrDefault(u => u.ID == id));
 
-            if (CategoryFromDBbyID == null)
+        [HttpPost, ActionName("DeleteCategory")]
+        public IActionResult DeleteCategoryPost(int? id)
+        {
+            var deletingResult = _service.Category.DeleteCategory(id);
+
+            if (!deletingResult)
             {
-                TempData["error"] = "Category wasn`t deleted";
                 return NotFound();
             }
-            _unitOfWork.Category.Delete(_mapper.Map<CategoryEntity>(CategoryFromDBbyID));
-            _unitOfWork.save();
-            TempData["success"] = "Category deleted successfully";
             return RedirectToAction("Index");
         }
     }

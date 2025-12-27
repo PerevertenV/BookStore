@@ -1,11 +1,11 @@
 ﻿using DataAccess.Repository.IRepository;
-using JustStore.Models;
+using DataAccess.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Stripe.Climate;
 using System.Diagnostics;
-using JustStore.Utlity;
-using JustStore.Models.ViewModels;
+using DataAccess.Utlity;
+using DataAccess.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Stripe;
@@ -49,6 +49,7 @@ namespace JustStoreMVC.Areas.Admin.Controllers
 
             return View(orderVM);
         }
+
         [HttpPost]
         [Authorize(Roles = SD.Role_Admin+","+SD.Role_Employee)]
         public IActionResult UpdateOrderDetail(int id)
@@ -58,10 +59,11 @@ namespace JustStoreMVC.Areas.Admin.Controllers
 
             OrderHeaderFromDB.Name = orderVM.OrderHeader.Name;
             OrderHeaderFromDB.PhoneNumber = orderVM.OrderHeader.PhoneNumber;
-            OrderHeaderFromDB.StreetAdress = orderVM.OrderHeader.StreetAdress;
+            OrderHeaderFromDB.StreetAdress = orderVM.OrderHeader.StreetAddress;
             OrderHeaderFromDB.City = orderVM.OrderHeader.City;
             OrderHeaderFromDB.State = orderVM.OrderHeader.State;
             OrderHeaderFromDB.PostalCode = orderVM.OrderHeader.PostalCode;
+
             if (!string.IsNullOrEmpty(orderVM.OrderHeader.Carrier))
             {
                 OrderHeaderFromDB.Carrier = orderVM.OrderHeader.Carrier;
@@ -80,7 +82,7 @@ namespace JustStoreMVC.Areas.Admin.Controllers
         }
         
         [HttpPost]
-        [Authorize(Roles = SD.Role_Admin+","+SD.Role_Employee)]
+        [Authorize(Roles = SD.Role_Admin + "," + SD.Role_Employee)]
         public IActionResult StartProcessing(int id)
         {
             _unitOfWork.OrderHeader.UpdateStatus(orderVM.OrderHeader.Id, SD.StatusInProcess);

@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using DataAccess.Entity;
 using DataAccess.Repository.IRepository;
-using JustStore.Models;
-using JustStore.Utlity;
+using DataAccess.Models;
+using DataAccess.Utlity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,16 +30,12 @@ namespace JustStoreMVC.Areas.Admin.Controllers
 
 		public IActionResult Upsert(int? id) // = Update + Insert 
 		{
-			
-
 			if(id == null || id == 0) 
 			{
-				//create
 				return View(new Company());
 			}
 			else 
 			{
-                //update
                 Company company = _mapper.Map<Company>(_unitOfWork.Company.GetFirstOrDefault(u => u.Id == id));
 				return View(company);
 			}

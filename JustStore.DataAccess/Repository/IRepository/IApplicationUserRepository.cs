@@ -4,12 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DataAccess.Entity;
-using JustStore.Models;
+using DataAccess.Models;
 
-namespace DataAccess.Repository.IRepository
-{
-	public interface IApplicationUserRepository : IRepository<ApplicationUser>
-	{
-		public void Update(ApplicationUser applicationUser);
-	}
-}
+namespace DataAccess.Repository.IRepository;
+public interface IApplicationUserRepository : IRepository<ApplicationUser, ApplicationUser>;

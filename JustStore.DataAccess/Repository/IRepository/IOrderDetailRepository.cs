@@ -4,12 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DataAccess.Entity;
-using JustStore.Models;
+using DataAccess.Models;
 
 namespace DataAccess.Repository.IRepository
 {
-	public interface IOrderDetailRepository : IRepository<OrderDetailsEntity>
-	{
-		void Update(OrderDetailsEntity obj);
-	}
+	public interface IOrderDetailRepository : IRepository<OrderDetailsEntity, OrderDetail>;
 }

@@ -1,10 +1,6 @@
-﻿using AutoMapper;
-using DataAccess.Entity;
-using DataAccess.Repository.IRepository;
-using JustStore.Models;
+﻿using DataAccess.Entity;
+using DataAccess.Models;
 using JustStoreMVC.Areas.Admin.Controllers;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Moq;
 using System.Linq.Expressions;
 

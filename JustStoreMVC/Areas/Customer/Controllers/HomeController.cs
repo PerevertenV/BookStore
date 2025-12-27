@@ -2,8 +2,8 @@ using AutoMapper;
 using DataAccess.Entity;
 using DataAccess.Repository;
 using DataAccess.Repository.IRepository;
-using JustStore.Models;
-using JustStore.Utlity;
+using DataAccess.Models;
+using DataAccess.Utlity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Stripe;
@@ -30,7 +30,7 @@ namespace JustStoreMVC.Areas.Customer.Controllers
         {
             var ProductsFromDb = _unitOfWork.Product
                 .GetAll(includeProperties: "Category,ProductImages");
-            IEnumerable<JustStore.Models.Product> productList = _mapper.Map<IEnumerable<JustStore.Models.Product>>(ProductsFromDb);
+            IEnumerable<DataAccess.Models.Product> productList = _mapper.Map<IEnumerable<DataAccess.Models.Product>>(ProductsFromDb);
             return View(productList);
         }
         
@@ -41,7 +41,7 @@ namespace JustStoreMVC.Areas.Customer.Controllers
 
             ShoppingCart cart = new()
             {
-                Product = _mapper.Map<JustStore.Models.Product>(productEntity),
+                Product = _mapper.Map<DataAccess.Models.Product>(productEntity),
                 Count = 1,
                 ProductId = id
             };

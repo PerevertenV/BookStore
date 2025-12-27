@@ -1,15 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DataAccess.Entity;
-using JustStore.Models;
+﻿using DataAccess.Entity;
+using DataAccess.Models;
+using DataAccess.Models;
 
-namespace DataAccess.Repository.IRepository
-{
-	public interface IProductRepository : IRepository<ProductEntity>
-	{
-		void Update(ProductEntity obj);
-	}
-}
+namespace DataAccess.Repository.IRepository;
+public interface IProductRepository : IRepository<ProductEntity, Product>;
+

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JustStore.Utlity
+namespace DataAccess.Utlity
 {
     public static class SD
     {

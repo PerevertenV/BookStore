@@ -1,4 +1,7 @@
 ﻿@using DataAccess.Entity
+@using DataAccess.Models
+@using DataAccess.Models.ViewModels
+@using DataAccess.Utlity
 @model IEnumerable<Product>
  
 <partial name="_Notifications" />
@@ -41,7 +44,7 @@
 						</div>
 						<div>
 							<a asp-action="Details" 
-							asp-route-id="@product.ID"
+							asp-route-id="@product.Id"
 							class="btn btn-primary border-0 form-control">
 								Details
 							</a>

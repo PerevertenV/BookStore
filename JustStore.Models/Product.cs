@@ -1,42 +1,37 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace JustStore.Models
 {
     [Table("Product")]
     public class Product
     {
-        public int ID { get; set; }
+        public int Id { get; set; }
 
         [Required]
-		[MaxLength(30)]
-		[DisplayName("Title")]
-		public string Title { get; set; }
+        [MaxLength(30)]
+        [DisplayName("Title")]
+        public string Title { get; set; }
 
         [Required]
         public string ISBN { get; set; }
 
         [Required]
-		[MaxLength(30)]
-		[DisplayName("Author")]
-		public string Author { get; set; }
+        [MaxLength(30)]
+        [DisplayName("Author")]
+        public string Author { get; set; }
 
         [Required]
-		[DisplayName("Description")]
-		public string Description { get; set; }
+        [DisplayName("Description")]
+        public string Description { get; set; }
 
         [Required]
         [DisplayName("List Price")]
         [Range(0, 1000)]
-        public double ListPrice { get; set; }  
-        
+        public double ListPrice { get; set; }
+
         [Required]
         [DisplayName("Price 1 - 50")]
         [Range(0, 1000)]
@@ -52,8 +47,8 @@ namespace JustStore.Models
         [Range(0, 1000)]
         public double Price100 { get; set; }
 
-		[DisplayName("Category")]
-		public int CategoryId{ get; set; }
+        [DisplayName("Category")]
+        public int CategoryId { get; set; }
         [ValidateNever]
         public Category Category { get; set; }
 

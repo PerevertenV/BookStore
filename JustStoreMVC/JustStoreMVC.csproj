@@ -4,10 +4,21 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+
+	  <CollectCoverage>true</CollectCoverage>
+	  <CoverletOutputFormat>cobertura</CoverletOutputFormat>
+	  <CoverletOutput>TestResults\coverage.xml</CoverletOutput>
+	  
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+    <PackageReference Include="ClosedXML" Version="0.105.0" />
+    <PackageReference Include="coverlet.collector" Version="6.0.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="iTextSharp" Version="5.5.13.4" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="8.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="8.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Components.QuickGrid.EntityFrameworkAdapter" Version="8.0.2" />
@@ -25,8 +36,8 @@
   </ItemGroup>
 
   <ItemGroup>
-	<ProjectReference Include="..\JustStore.DataAccess\DataAccess.csproj" />
-    <ProjectReference Include="..\JustStore.Models\JustStore.Models.csproj" />
+    <ProjectReference Include="..\BookStore.Services\BookStore.Services.csproj" />
+    <ProjectReference Include="..\JustStore.DataAccess\DataAccess.csproj" />
     <ProjectReference Include="..\JustStore.Utlity\JustStore.Utlity.csproj" />
   </ItemGroup>
 

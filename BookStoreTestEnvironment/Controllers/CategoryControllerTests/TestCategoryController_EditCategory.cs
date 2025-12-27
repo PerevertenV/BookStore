@@ -1,5 +1,5 @@
 ﻿using DataAccess.Entity;
-using JustStore.Models;
+using DataAccess.Models;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 

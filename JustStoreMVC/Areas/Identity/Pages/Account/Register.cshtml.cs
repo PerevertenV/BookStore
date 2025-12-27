@@ -11,8 +11,8 @@ using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
 using DataAccess.Repository.IRepository;
-using JustStore.Models;
-using JustStore.Utlity;
+using DataAccess.Models;
+using DataAccess.Utlity;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -23,6 +23,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using DataAccess.Entity;
 
 namespace JustStoreMVC.Areas.Identity.Pages.Account
 {
@@ -159,7 +160,7 @@ namespace JustStoreMVC.Areas.Identity.Pages.Account
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 user.Name = Input.Name;
-                user.StreetAdress = Input.StreetAdress;
+                user.StreetAddress = Input.StreetAdress;
                 user.City = Input.City; 
                 user.State = Input.State;   
                 user.PostalCode = Input.PostalCode;

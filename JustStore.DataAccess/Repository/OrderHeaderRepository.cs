@@ -1,7 +1,8 @@
-﻿using DataAccess.Data;
+﻿using AutoMapper;
+using DataAccess.Data;
 using DataAccess.Entity;
 using DataAccess.Repository.IRepository;
-using JustStore.Models;
+using DataAccess.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,19 +12,14 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Repository
 {
-	public class OrderHeaderRepository : Repository<OrderHeaderEntity>, IOrderHeaderRepository 
+	public class OrderHeaderRepository : Repository<OrderHeaderEntity, OrderHeader>, IOrderHeaderRepository 
 	{
-		private AplicationDBContextcs _db;
+		private readonly AplicationDBContextcs _db;
 
-		public OrderHeaderRepository(AplicationDBContextcs? db) : base(db)
+		public OrderHeaderRepository(AplicationDBContextcs db, IMapper mapper) : base(db, mapper)
         {
 			_db = db;
         }
-
-		public void Update(OrderHeaderEntity obj)
-		{
-			_db.OrderHeaders.Update(obj);
-		}
 
 		public void UpdateStatus(int id, string orderStatus, string? paymentStatus = null)
 		{
@@ -44,11 +40,11 @@ namespace DataAccess.Repository
 			var orderFromDb = _db.OrderHeaders.FirstOrDefault(x => x.Id == id);
 			if (!string.IsNullOrEmpty(sessionId)) 
 			{
-				orderFromDb.SessionId = sessionId;
+				orderFromDb!.SessionId = sessionId;
 			}
 			if (!string.IsNullOrEmpty(paymentIntentId)) 
 			{
-				orderFromDb.PaymentIntentId = paymentIntentId;
+				orderFromDb!.PaymentIntentId = paymentIntentId;
 				orderFromDb.PaymentDate = DateTime.Now;
 			}
 		}

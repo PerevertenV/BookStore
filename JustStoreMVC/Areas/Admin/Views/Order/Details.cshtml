@@ -61,12 +61,12 @@
                                 <div class="col-9">
                                     @if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
                                     {
-                                        <input asp-for="OrderHeader.StreetAdress" type="text" class="form-control" />
-                                        <span asp-validation-for="OrderHeader.StreetAdress" class="text-danger"></span>
+                                        <input asp-for="OrderHeader.StreetAddress" type="text" class="form-control" />
+                                        <span asp-validation-for="OrderHeader.StreetAddress" class="text-danger"></span>
                                     }
                                     else
                                     {
-                                        <input asp-for="OrderHeader.StreetAdress" readonly type="text" class="form-control" />
+                                        <input asp-for="OrderHeader.StreetAddress" readonly type="text" class="form-control" />
                                     }
                                 </div>
                             </div>

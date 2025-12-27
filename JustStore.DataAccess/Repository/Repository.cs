@@ -1,69 +1,95 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AutoMapper;
 using DataAccess.Data;
-using DataAccess.Repository.IRepository;
+using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
+using DataAccess.Repository.IRepository;
 
 namespace DataAccess.Repository
 {
-	public class Repository<T> : IRepository<T> where T : class
+	public class Repository<T, M> : IRepository<T, M> where T : class
 	{
 		private readonly AplicationDBContextcs _db;
+		private readonly IMapper _mapper;
 		internal DbSet<T> dbSet;
-		public Repository(AplicationDBContextcs? db) 
+
+		public Repository(AplicationDBContextcs db, IMapper mapper) 
 		{
 			_db = db;
+			_mapper = mapper;
 			this.dbSet = _db.Set<T>();
 			_db.Products.Include(u => u.Category).Include(u=>u.CategoryId);
 		}
-		public void Add(T entity)
-		{
-			dbSet.Add(entity);
-		}
 
-		public void Delete(T entity)
+		public void Add(M entity)
 		{
-			dbSet.Remove(entity);
-		}
+			dbSet.Add(_mapper.Map<T>(entity));
+            _db.SaveChanges();
+        }
 
-		public void DeleteRange(IEnumerable<T> entities)
+		public void Delete(M entity)
 		{
-			dbSet.RemoveRange(entities);
-		}
+			dbSet.Remove(_mapper.Map<T>(entity));
+            _db.SaveChanges();
+        }
 
-		public IEnumerable<T> GetAll(Expression<Func<T, bool>>? filter, string? includeProperties = null)
+        public void DeleteRange(IEnumerable<M> entities)
 		{
-			IQueryable<T> query = dbSet;
-			if(filter != null) { query = query.Where(filter); }
-            if (!string.IsNullOrEmpty(includeProperties)) 
-			{
-				foreach(var includeProp in includeProperties
-					.Split(new char[] {','}, StringSplitOptions.RemoveEmptyEntries)) 
-				{
-					query = query.Include(includeProp);
-				}
-			}
-			return query.ToList();
-		}
+			dbSet.RemoveRange(_mapper.Map<IEnumerable<T>>(entities));
+            _db.SaveChanges();
+        }
 
-		public T GetFirstOrDefault(Expression<Func<T, bool>> filter, 
-			string? includeProperties = null, bool tracked = false)
-		{
-			IQueryable<T> query = tracked? dbSet: dbSet.AsNoTracking();
-			query = query.Where(filter);
-			if (!string.IsNullOrEmpty(includeProperties))
-			{
-				foreach (var includeProp in includeProperties
-					.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-				{
-					query = query.Include(includeProp);
-				}
-			}
-			return query.FirstOrDefault();
-		}
-	}
+        public IEnumerable<M?> GetAll(Expression<Func<T, bool>>? filter = null, string? includeProperties = null)
+        {
+            IQueryable<T> query = this.dbSet;
+
+            query = query.AsNoTracking();
+
+            query = filter != null ? query.Where(filter) : query;
+
+            if (!string.IsNullOrEmpty(includeProperties))
+            {
+                foreach (var includeProp in includeProperties
+                    .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProp);
+                }
+            }
+
+            var list = query.ToList();
+
+            return _mapper.Map<IEnumerable<M>>(list);
+        }
+
+        public M? GetFirstOrDefault(Expression<Func<T, bool>> filter, string? includeProperties = null)
+        {
+            IQueryable<T> query = this.dbSet;
+
+            query = filter != null ? query.Where(filter) : query;
+
+            if (!string.IsNullOrEmpty(includeProperties))
+            {
+                foreach (var includeProp in includeProperties
+                    .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProp);
+                }
+            }
+
+            var obj = query.FirstOrDefault();
+
+            return _mapper.Map<M?>(obj);
+        }
+
+        public void Update(M item)
+        {
+            var keyValue = typeof(M).GetProperty("Id")?.GetValue(item); 
+            
+            if (keyValue == null) throw new InvalidOperationException($"Entity was not found");
+
+            var existingEntity = this.dbSet.Find(keyValue);
+
+            if (existingEntity != null) { _mapper.Map(item, existingEntity);  _db.SaveChanges(); }
+        }
+    }
 }
+

@@ -2,9 +2,9 @@
 using DataAccess.Data;
 using DataAccess.Entity;
 using DataAccess.Repository.IRepository;
-using JustStore.Models;
-using JustStore.Models.ViewModels;
-using JustStore.Utlity;
+using DataAccess.Models;
+using DataAccess.Models.ViewModels;
+using DataAccess.Utlity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -37,10 +37,9 @@ namespace JustStoreMVC.Areas.Admin.Controllers
 			return View();
 		}
 
-		public IActionResult RoleManagment(string userId)
+		public IActionResult RoleManagement(string userId)
 		{
-
-            RoleManagmentVM RoleVM = new RoleManagmentVM()
+            RoleManagementVM RoleVM = new RoleManagementVM()
 			{
 				ApplicationUser = _unitOfWork.ApplicationUser.GetFirstOrDefault(u => u.Id == userId,
                     includeProperties: "Company"),
@@ -60,11 +59,12 @@ namespace JustStoreMVC.Areas.Admin.Controllers
 
 			RoleVM.ApplicationUser.Role = _um.GetRolesAsync(_unitOfWork.ApplicationUser
 				.GetFirstOrDefault(u => u.Id == userId)).GetAwaiter().GetResult().FirstOrDefault();
+
 			return View(RoleVM);
 		}
 
 		[HttpPost]
-		public IActionResult RoleManagment(RoleManagmentVM rmvm) 
+		public IActionResult RoleManagment(RoleManagementVM rmvm) 
 		{
 			string oldRole = _um.GetRolesAsync(_unitOfWork.ApplicationUser
 				.GetFirstOrDefault(u => u.Id == rmvm.ApplicationUser.Id))

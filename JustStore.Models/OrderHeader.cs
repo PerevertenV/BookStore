@@ -1,21 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace JustStore.Models
 {
     public class OrderHeader
     {
         public int Id { get; set; }
-        public string ApplicationUserId { get; set; }
+        public string ApplicationUserId { get; set; } = default!;
 
         [ValidateNever]
-        public ApplicationUser ApplicationUser { get; set; }
+        public ApplicationUser ApplicationUser { get; set; } = default!;
 
         public DateTime OrderDate { get; set; }
         public DateTime ShippingDate { get; set; }
@@ -33,17 +27,17 @@ namespace JustStore.Models
         public string? PaymentIntentId { get; set; }
 
         [Required]
-        public string PhoneNumber { get; set; }
+        public string PhoneNumber { get; set; } = default!;
         [Required]
-        public string StreetAdress { get; set; }
+        public string StreetAddress { get; set; } = default!;
         [Required]
-        public string City { get; set; }
+        public string City { get; set; } = default!;
         [Required]
-        public string State { get; set; }
+        public string State { get; set; } = default!;
         [Required]
-        public string PostalCode { get; set; }
+        public string PostalCode { get; set; } = default!;
         [Required]
-        public string Name { get; set; }
+        public string Name { get; set; } = default!;
 
     }
 }

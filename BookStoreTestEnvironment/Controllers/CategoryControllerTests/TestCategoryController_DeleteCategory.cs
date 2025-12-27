@@ -1,5 +1,5 @@
 ﻿using DataAccess.Entity;
-using JustStore.Models;
+using DataAccess.Models;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using System.Linq.Expressions;
@@ -87,7 +87,7 @@ namespace BookStoreTestEnvironment.Controllers.CategoryControllerTests
 
         private IActionResult? callDeleteCategoryPostWithCorrectId()
         {
-            return _categoryController.DeleteCategoryPOST(correctCategoryId);
+            return _categoryController.DeleteCategoryPost(correctCategoryId);
         }
         [Test]
         public void checkCallOfSaveObj()
@@ -96,13 +96,13 @@ namespace BookStoreTestEnvironment.Controllers.CategoryControllerTests
             _mockUnitOfWork.Verify(u => u.save(), Times.Once());
         }
         [Test]
-        public void checkSuccesDeletedTempData()
+        public void checkSuccessDeletedTempData()
         {
             callDeleteCategoryPostWithCorrectId();
             Assert.That(_categoryController.TempData["success"], Is.EqualTo("Category deleted successfully"));
         }
         [Test]
-        public void comapareDeletedCategorySendedToDbAndOriginal()
+        public void compareDeletedCategorySenеToDbAndOriginal()
         {
             callDeleteCategoryPostWithCorrectId();
             Assert.That(sendedToDbCategory, Is.EqualTo(testEntityObj));
@@ -118,7 +118,7 @@ namespace BookStoreTestEnvironment.Controllers.CategoryControllerTests
 
         private IActionResult callDeleteCategoryPOSTyWithNotCorrectId()
         {
-            return _categoryController.DeleteCategoryPOST(inccorectCategoryId);
+            return _categoryController.DeleteCategoryPost(inccorectCategoryId);
         }
         [Test]
         public void checkErrorTempDataAfterDeleteting()

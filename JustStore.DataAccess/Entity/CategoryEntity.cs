@@ -13,7 +13,7 @@ namespace DataAccess.Entity
     public class CategoryEntity
     {
         [Key]
-        public int ID { get; set; }
+        public int Id { get; set; }
 
         [Required]
         [MaxLength(30)]

@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using DataAccess.Entity;
 using DataAccess.Repository.IRepository;
-using JustStore.Models;
-using JustStore.Models.ViewModels;
-using JustStore.Utlity;
+using DataAccess.Models;
+using DataAccess.Models.ViewModels;
+using DataAccess.Utlity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -67,7 +67,7 @@ namespace JustStoreMVC.Areas.Admin.Controllers
 			{
 				ProductEntity ProductToDb = (_mapper.Map<ProductEntity>(productVM.Product));
 
-                if (productVM.Product.ID == 0)
+                if (productVM.Product.Id == 0)
 				{
 					_unitOfWork.Product.Add(ProductToDb);
 					TempData["success"] = "Product created successfully";
@@ -79,8 +79,8 @@ namespace JustStoreMVC.Areas.Admin.Controllers
 				}
 				_unitOfWork.save();
 
-                productVM.Product.ID = ProductToDb.ID;
-
+                productVM.Product.Id = ProductToDb.ID;
+				//////
                 string wwwRootPath = _webHostEnvironment.WebRootPath;
 
 				if(files != null) 
@@ -89,7 +89,7 @@ namespace JustStoreMVC.Areas.Admin.Controllers
 					{
 						string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
 
-						string productPath = @"images\products\product-"+productVM.Product.ID;
+						string productPath = @"images\products\product-"+productVM.Product.Id;
 
 						string finalPath = Path.Combine(wwwRootPath, productPath);		
 
@@ -103,7 +103,7 @@ namespace JustStoreMVC.Areas.Admin.Controllers
 						ProductImage productImage = new() 
 						{
 							ImageUrl = @"\" + productPath + @"\" + fileName,
-							ProductId = productVM.Product.ID	
+							ProductId = productVM.Product.Id	
 						};
 
 						if(productVM.Product.ProductImages == null)
@@ -116,6 +116,7 @@ namespace JustStoreMVC.Areas.Admin.Controllers
 					_unitOfWork.save();
 
 				}
+				/////////////
 				
 				return RedirectToAction("Index");
 			}
@@ -136,7 +137,7 @@ namespace JustStoreMVC.Areas.Admin.Controllers
 		public IActionResult DeleteImage(int imageId) 
 		{
 			var imageToBeDeleted = _unitOfWork.ProductImages.GetFirstOrDefault(u => u.ID == imageId);
-			int prodeuctId = imageToBeDeleted.ProductId;
+			int productId = imageToBeDeleted.ProductId;
 			if(imageToBeDeleted != null) 
 			{
 				if (!string.IsNullOrEmpty(imageToBeDeleted.ImageUrl)) 
@@ -158,7 +159,7 @@ namespace JustStoreMVC.Areas.Admin.Controllers
 				TempData["success"] = "Deleted successfully";
 			}
 
-			return RedirectToAction(nameof(Upsert), new {id= prodeuctId});
+			return RedirectToAction(nameof(Upsert), new {id= productId});
 		}
 
 		#region API CALLS

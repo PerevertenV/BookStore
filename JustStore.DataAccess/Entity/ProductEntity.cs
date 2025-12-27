@@ -1,4 +1,4 @@
-﻿using JustStore.Models;
+﻿using DataAccess.Models;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System;
 using System.Collections.Generic;
@@ -15,21 +15,21 @@ namespace DataAccess.Entity
     public class ProductEntity
     {
         [Key]
-        public int ID { get; set; }
+        public int Id { get; set; }
 
         [Required]
         [MaxLength(30)]
-        public string Title { get; set; }
+        public string Title { get; set; } = default!;
 
         [Required]
-        public string ISBN { get; set; }
+        public string ISBN { get; set; } = default!;
 
         [Required]
         [MaxLength(30)]
-        public string Author { get; set; }
+        public string Author { get; set; } = default!;
 
         [Required]
-        public string Description { get; set; }
+        public string Description { get; set; } = default!;
 
         [Required]
         public double ListPrice { get; set; }
@@ -45,8 +45,8 @@ namespace DataAccess.Entity
 
         public int CategoryId { get; set; }
         [ForeignKey(nameof(CategoryId))]
-        public CategoryEntity Category { get; set; }
+        public CategoryEntity Category { get; set; } = default!;
 
-        public List<ProductImagesEntity> ProductImages { get; set; }
+        public List<ProductImagesEntity> ProductImages { get; set; } = default!;
     }
 }

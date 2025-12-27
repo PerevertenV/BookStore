@@ -1,17 +1,11 @@
 ﻿using AutoMapper;
 using DataAccess.Entity;
-using JustStore.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace JustStore.Models.AutoMapper
+namespace DataAccess.Models.AutoMapper
 {
     public class MappingProfile : Profile
     {
-        public MappingProfile() 
+        public MappingProfile()
         {
 
             CreateMap<CategoryEntity, Category>();

@@ -3,12 +3,14 @@ using DataAccess.Repository;
 using DataAccess.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
-using JustStore.Utlity;
+using DataAccess.Utlity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Stripe;
 using DataAccess.DBInitializer;
 using Microsoft.AspNetCore.Hosting;
-using JustStore.Models.AutoMapper;
+using DataAccess.Models.AutoMapper;
+using BookStore.Services.IServices;
+using BookStore.Services.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,10 +46,10 @@ builder.Services.AddSession(options => {
 });
 
 builder.Services.AddScoped<IDBInitializer, DBInitializer>();
-builder.Services.AddRazorPages();	
 builder.Services.AddScoped<IUnitOfWork, UnitOFWork>();
-builder.Services.AddScoped<IEmailSender, EmailSender>();
 builder.Services.AddAutoMapper(typeof(MappingProfile));
+builder.Services.AddScoped<IService, Service>();
+builder.Services.AddRazorPages();	
 
 
 var app = builder.Build();

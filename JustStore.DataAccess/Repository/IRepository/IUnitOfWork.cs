@@ -1,21 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace DataAccess.Repository.IRepository;
 
-namespace DataAccess.Repository.IRepository
+public interface IUnitOfWork
 {
-	public interface IUnitOfWork
-	{
-		ICategoryRepository Category { get; }
-		IProductImagesRepository ProductImages { get; }
-		IProductRepository Product { get; }
-		ICompanyRepository Company { get; }
-		IShoppingCartRepository ShoppingCart { get; }
-		IApplicationUserRepository ApplicationUser { get; }
-		IOrderDetailRepository OrderDetail { get; }
-		IOrderHeaderRepository OrderHeader { get; }
-		void save();
-	}
+	IProductRepository Product { get; }
+	ICompanyRepository Company { get; }
+	ICategoryRepository Category { get; }
+	IOrderDetailRepository OrderDetail { get; }
+	IOrderHeaderRepository OrderHeader { get; }
+	IShoppingCartRepository ShoppingCart { get; }
+	IProductImagesRepository ProductImages { get; }
+	IApplicationUserRepository ApplicationUser { get; }
 }

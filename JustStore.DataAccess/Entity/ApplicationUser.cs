@@ -1,22 +1,16 @@
-﻿using DataAccess.Entity;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace JustStore.Models
+namespace DataAccess.Entity
 {
     public class ApplicationUser : IdentityUser
     {
         [Required]
         public string? Name { get; set; }
 
-        public string? StreetAdress { get; set; }
+        public string? StreetAddress { get; set; }
         public string? City { get; set; }
         public string? State { get; set; }
         public string? PostalCode { get; set; }
@@ -27,7 +21,7 @@ namespace JustStore.Models
         public CompanyEntity? Company { get; set; }
 
         [NotMapped]
-        public string Role { get; set; }
+        public string Role { get; set; } = default!;
 
     }
 }

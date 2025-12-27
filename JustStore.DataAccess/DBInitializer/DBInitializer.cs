@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using JustStore.Utlity;
+using DataAccess.Utlity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using JustStore.Models;
+using DataAccess.Models;
 using DataAccess.Entity;
 using DataAccess.Data;
 
@@ -51,7 +51,7 @@ namespace DataAccess.DBInitializer
                     Email = "pv@gmail.com",
                     Name = "Vadym",
                     PhoneNumber = "1234567890",
-                    StreetAdress = "1234567890",
+                    StreetAddress = "1234567890",
                     State = "LA",
                     PostalCode = "1234567890",
                     City = "California",

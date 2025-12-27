@@ -1,17 +1,9 @@
-﻿using AutoMapper;
-using DataAccess.Entity;
-using DataAccess.Repository.IRepository;
-using JustStore.Models;
-using JustStoreMVC.Areas.Admin.Controllers;
+﻿using DataAccess.Entity;
+using DataAccess.Models;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework.Internal;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BookStoreTestEnvironment.Controllers.CategoryControllerTests
 {

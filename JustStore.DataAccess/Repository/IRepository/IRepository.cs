@@ -1,20 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq.Expressions;
 
 namespace DataAccess.Repository.IRepository
 {
-	public interface IRepository<T> where T : class
+	public interface IRepository<T, M> where T : class
 	{
-		//T - Category
-		IEnumerable<T> GetAll(Expression<Func<T, bool>>? filter=null, string? includeProperties = null);
-		T GetFirstOrDefault(Expression<Func<T, bool>> filter,
-			string? includeProperties = null, bool tracked = false);
-		void Add(T entity);
-		void Delete(T entity);
-		void DeleteRange(IEnumerable<T> entities);
-	}
+		IEnumerable<M?> GetAll(Expression<Func<T, bool>>? filter = null, string? includeProperties = null);
+
+		M? GetFirstOrDefault(Expression<Func<T, bool>> filter, string? includeProperties = null);
+
+		void Add(M obj);
+
+		void Delete(M obj);
+
+		void DeleteRange(IEnumerable<M> objs);
+
+		void Update(M item);
+
+    }
 }

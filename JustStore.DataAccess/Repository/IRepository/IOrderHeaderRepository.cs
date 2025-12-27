@@ -4,13 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DataAccess.Entity;
-using JustStore.Models;
+using DataAccess.Models;
 
 namespace DataAccess.Repository.IRepository
 {
-	public interface IOrderHeaderRepository : IRepository<OrderHeaderEntity>
+	public interface IOrderHeaderRepository : IRepository<OrderHeaderEntity, OrderHeader>
 	{
-		void Update(OrderHeaderEntity obj);
 		void UpdateStatus(int id, string orderStatus, string? paymentStatus = null);
 		void UpdateStripePaymentId(int id, string sessionId ,string paymentIntentId);
 	}
