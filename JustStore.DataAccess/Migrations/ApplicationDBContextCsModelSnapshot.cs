@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(AplicationDBContextcs))]
-    partial class AplicationDBContextcsModelSnapshot : ModelSnapshot
+    partial class ApplicationDBContextCsModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {

@@ -1,12 +1,9 @@
-﻿using AutoMapper;
-using DataAccess.Entity;
-using DataAccess.Repository.IRepository;
+﻿using BookStore.Services.IServices;
 using DataAccess.Models;
 using DataAccess.Models.ViewModels;
 using DataAccess.Utlity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace JustStoreMVC.Areas.Admin.Controllers
 {
@@ -14,195 +11,79 @@ namespace JustStoreMVC.Areas.Admin.Controllers
     [Authorize(Roles = SD.Role_Admin)]
     public class ProductController : Controller
     {
-        private readonly IUnitOfWork _unitOfWork;
-		private readonly IWebHostEnvironment _webHostEnvironment;
-		private readonly IMapper _mapper;
+        private readonly IService _service;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public ProductController(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment, IMapper mapper)
+        public ProductController(IService service, IWebHostEnvironment webHostEnvironment)
         {
-            _unitOfWork = unitOfWork;
-			_webHostEnvironment = webHostEnvironment;
-			_mapper = mapper;
+            _service = service;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public IActionResult Index()
         {
-			var productEntity = _unitOfWork.Product
-				.GetAll(includeProperties: "Category").ToList();
-            List<Product> ObjectsFromDb = _mapper.Map<List<Product>>(productEntity);
-
-            return View(ObjectsFromDb);
+            var productList = _service.Product.GetAllProducts();
+            return View(productList);
         }
 
-		public IActionResult Upsert(int? id) // = Update + Insert 
-		{
-			ProductVM productVM = new()
-			{
-				 CategoryList = _unitOfWork.Category.GetAll()
-				.Select(u => new SelectListItem
-				{
-					Text = u.Name,
-					Value = u.ID.ToString()
-				}),
-				Product = new Product()
-			};
-			if(id == null || id == 0) 
-			{
-				//create
-				return View(productVM);
-			}
-			else 
-			{
-				var productEntityWithImage = _unitOfWork.Product.GetFirstOrDefault(u => u.ID == id,
-                    includeProperties: "ProductImages");
-				//update
-				productVM.Product = _mapper.Map<Product>(productEntityWithImage);
-				return View(productVM);
-			}
-		}
-		[HttpPost]
-		public IActionResult Upsert(ProductVM productVM, List<IFormFile> files)
-		{
-			if (ModelState.IsValid)
-			{
-				ProductEntity ProductToDb = (_mapper.Map<ProductEntity>(productVM.Product));
-
-                if (productVM.Product.Id == 0)
-				{
-					_unitOfWork.Product.Add(ProductToDb);
-					TempData["success"] = "Product created successfully";
-				}
-				else
-				{
-					_unitOfWork.Product.Update(ProductToDb);
-					TempData["success"] = "Product updated successfully";
-				}
-				_unitOfWork.save();
-
-                productVM.Product.Id = ProductToDb.ID;
-				//////
-                string wwwRootPath = _webHostEnvironment.WebRootPath;
-
-				if(files != null) 
-				{
-					foreach (IFormFile file in files) 
-					{
-						string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-
-						string productPath = @"images\products\product-"+productVM.Product.Id;
-
-						string finalPath = Path.Combine(wwwRootPath, productPath);		
-
-						if (!Directory.Exists(finalPath)) { Directory.CreateDirectory(finalPath); }
-
-						using (var fileStream = new FileStream(Path.Combine(finalPath, fileName), FileMode.Create))
-						{
-							file.CopyTo(fileStream);
-						}
-
-						ProductImage productImage = new() 
-						{
-							ImageUrl = @"\" + productPath + @"\" + fileName,
-							ProductId = productVM.Product.Id	
-						};
-
-						if(productVM.Product.ProductImages == null)
-							productVM.Product.ProductImages = new List<ProductImage>();
-
-						productVM.Product.ProductImages.Add(productImage);
-					}
-
-					_unitOfWork.Product.Update(_mapper.Map<ProductEntity>(productVM.Product));
-					_unitOfWork.save();
-
-				}
-				/////////////
-				
-				return RedirectToAction("Index");
-			}
-			else
-			{
-
-				productVM.CategoryList = _unitOfWork.Category.GetAll()
-				.Select(u => new SelectListItem
-				{
-					Text = u.Name,
-					Value = u.ID.ToString()
-				});
-				return View(productVM);
-			}
-
-		}
-
-		public IActionResult DeleteImage(int imageId) 
-		{
-			var imageToBeDeleted = _unitOfWork.ProductImages.GetFirstOrDefault(u => u.ID == imageId);
-			int productId = imageToBeDeleted.ProductId;
-			if(imageToBeDeleted != null) 
-			{
-				if (!string.IsNullOrEmpty(imageToBeDeleted.ImageUrl)) 
-				{
-
-					var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath,
-									imageToBeDeleted.ImageUrl.TrimStart('\\'));
-
-					if (System.IO.File.Exists(oldImagePath))
-					{
-						System.IO.File.Delete(oldImagePath);
-					}
-
-				}
-
-				_unitOfWork.ProductImages.Delete(imageToBeDeleted);
-				_unitOfWork.save();
-
-				TempData["success"] = "Deleted successfully";
-			}
-
-			return RedirectToAction(nameof(Upsert), new {id= productId});
-		}
-
-		#region API CALLS
-		[HttpGet]
-		public IActionResult GetAll()
-		{
-			var productsFromDb = _unitOfWork.Product
-                           .GetAll(includeProperties: "Category").ToList();
-
-            List<Product> ObjectsFromDbMapped = _mapper.Map<List<Product>>(productsFromDb);
-			return Json(new { data = ObjectsFromDbMapped });
+        public IActionResult Upsert(int? id)
+        {
+            ProductVM productVM = new()
+            {
+                CategoryList = _service.Product.GetCategoryList(),
+                Product = _service.Product.GetProductById(id) ?? new Product()
+            };
+            return View(productVM);
         }
-		[HttpDelete]
-		public IActionResult Delete(int? id)
-		{
-			var productToBeDeleted = _unitOfWork.Product.GetFirstOrDefault(u=>u.ID == id);
-			if (productToBeDeleted == null) 
-			{
-				return Json(new { succes = false, message = "Error while deleting" });
-			}
 
-			string productPath = @"images\products\product-" + id;
+        [HttpPost]
+        public IActionResult Upsert(ProductVM productVM, List<IFormFile> files)
+        {
+            if (ModelState.IsValid)
+            {
+                _service.Product.UpsertProduct(productVM.Product, files, _webHostEnvironment.WebRootPath);
+                TempData["success"] = "Product created/updated successfully";
+                return RedirectToAction("Index");
+            }
 
-			string finalPath = Path.Combine(_webHostEnvironment.WebRootPath, productPath);
+            productVM.CategoryList = _service.Product.GetCategoryList();
+            return View(productVM);
+        }
 
-			if (Directory.Exists(finalPath)) 
-			{
-				string[] filePaths = Directory.GetFiles(finalPath);
+        public IActionResult DeleteImage(int imageId)
+        {
+           var deletingResult = _service.Product.DeleteImage(imageId, _webHostEnvironment.WebRootPath);
 
-				foreach (string filePath in filePaths) 
-				{
-					System.IO.File.Delete(filePath);
-				}
+            if(deletingResult == 0)
+            {
+                TempData["error"] = "Error while deleting image";
+                return RedirectToAction(nameof(DeleteImage) , new {imageId = imageId});
+            }
 
-				Directory.Delete(finalPath);
-			}
+            TempData["success"] = "Image deleted successfully";
+            return RedirectToAction(nameof(Upsert), new { id = deletingResult });
+        }
 
-			_unitOfWork.Product.Delete(productToBeDeleted);
-			_unitOfWork.save();
+        #region API CALLS
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            var data = _service.Product.GetAllProducts();
+            return Json(new { data = data });
+        }
 
-			return Json(new { succes = true, message = "Delete Successful"});
+        [HttpDelete]
+        public IActionResult Delete(int? id)
+        {
+            var result = _service.Product.DeleteProduct(id, _webHostEnvironment.WebRootPath);
 
-		}
-		#endregion
-	}
+            if (!result)
+            {
+                return Json(new { success = false, message = "Error while deleting" });
+            }
+
+            return Json(new { success = true, message = "Delete Successful" });
+        }
+        #endregion
+    }
 }
